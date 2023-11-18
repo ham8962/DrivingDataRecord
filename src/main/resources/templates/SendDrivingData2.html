@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>주행 데이터 전송</title>
+</head>
+<body>
+<h2>주행 데이터 전송</h2>
+<form id="vinForm">
+  <label for="vin">Car VIN(차대번호 선택):</label><br>
+  <select id="vin" name="vin">
+    <option th:each="vin : ${userCarVinList}" th:value="${vin}" th:text="${vin}"></option>
+  </select><br>
+  <input type="button" value="선택" onclick="sendVin()">
+</form>
+
+<form id="myForm">
+  <label for="speed">Speed:</label><br>
+  <input type="number" id="speed" name="speed"><br>
+  <label for="rpm">RPM:</label><br>
+  <input type="number" id="rpm" name="rpm"><br>
+  <label for="totalDistance">주행거리:</label><br>
+  <input type="number" id="totalDistance" name="totalDistance"><br>
+  <input type="submit" value="전송">
+</form>
+
+<a id="serviceLink" href="/selectingService">서비스 선택</a>
+
+<script>
+  function sendVin() {
+    let vinData = {
+      vin : document.getElementById('vin').value
+    };
+
+    fetch('/sendSelectedVin', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(vinData),
+    })
+            .then(response => response.json())
+            .then(data => {
+              console.log('Success:', data);
+              tableID = data; // 서버로부터 받은 tableID 저장
+            })
+            .catch((error) => {
+              console.error('Error:', error);
+            });
+  }
+
+  document.getElementById('myForm').addEventListener('submit', function(e){
+    e.preventDefault();
+
+    let sendData = {
+      tableID : tableID,
+      speed: document.getElementById('speed').value,
+      rpm: document.getElementById('rpm').value,
+      totalDistance: document.getElementById('totalDistance').value
+    };
+
+    fetch('/sendDrivingData', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(sendData),
+    })
+            .then(response => response.json())
+            .then(data => {
+              console.log('Success:', data);
+            })
+            .catch((error) => {
+              console.error('Error:', error);
+            });
+  });
+</script>
+</body>
+</html>

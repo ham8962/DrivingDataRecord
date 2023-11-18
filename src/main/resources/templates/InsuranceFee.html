@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Insurance Fee</title>
+    <style>
+        /* 링크 위에 여백 추가 */
+        #serviceLink {
+            display: block;
+            margin-top: 50px;
+        }
+    </style>
+    <script>
+        window.onload = function() {
+            document.getElementById("selectButton").addEventListener("click", function() {
+                let selectedVin = document.getElementById("vinSelect").value;
+                fetch('/InsuranceFee/' + selectedVin)
+                    .then(response => response.text())
+                    .then(data => {
+                        let insuranceFeeElement = document.getElementById("insuranceFee");
+                        insuranceFeeElement.innerHTML = data;
+                    });
+            });
+        };
+    </script>
+</head>
+<body>
+<h1>보험료 조회</h1>
+<select id="vinSelect">
+    <option>차대번호 선택</option>
+    <option th:each="vin : ${userCarVinList}" th:value="${vin}" th:text="${vin}"></option>
+</select>
+
+<button id="selectButton">선택</button>
+
+<div id="insuranceFee">
+    <!-- 보험료와 할인 여부가 표시되는 영역 -->
+</div>
+
+<a id="serviceLink" href="/selectingService">서비스 선택</a>
+
+</body>
+</html>

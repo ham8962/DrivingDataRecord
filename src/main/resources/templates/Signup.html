@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>회원가입</title>
+  <script>
+    window.onload = function () {
+      let form = document.getElementById('registerForm');
+      form.onsubmit = function (e) {
+        e.preventDefault();
+        let formData = new FormData(form);
+        let data = {};
+        for (let [key, value] of formData) {
+          data[key] = value;
+        }
+        fetch('/register', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data),
+        });
+      };
+    };
+  </script>
+</head>
+<body>
+<h2>회원가입</h2>
+
+<form id="registerForm" action="/register" method="POST">
+  <!-- 사용자명 입력 필드 -->
+  <label for="ID">ID:</label><br>
+  <input type="text" id="ID" name="ID"><br><br>
+
+  <!-- 비밀번호 입력 필드 -->
+  <label for="password">비밀번호:</label><br>
+  <input type="password" id="password" name="password"><br><br>
+
+  <!-- 사용자 정보 -->
+  <h3>사용자 정보</h3>
+
+  <!-- 이름 입력 필드 -->
+  <label for="name">이름:</label><br>
+  <input type="text" id="name" name="name"><br><br>
+
+  <label for="name">생일:</label><br>
+  <input type="text" id="birth" name="birth"><br><br>
+
+  <!-- 주소 입력 필드 -->
+  <label for="address">주소:</label><br>
+  <input type ="text" id ="address" name ="address"><br><br>
+
+  <!-- 핸드폰 번호 입력 필드 -->
+  <label for = "phone_number" > 핸드폰 번호 :</label><br>
+  <input type = "text" id = "phone_number" name = "phone_number" ><br><br>
+
+  <!-- 운전면허 번호 입력 필드 -->
+  <label for = "driverLicense" > 운전면허 번호 :</label ><br>
+  <input type = "text" id = "driverLicense" name = "driverLicense" ><br><br>
+
+  <!-- 차량 정보 -->
+  <h3>차량 정보</h3>
+
+  <!-- 차 번호 입력 필드 -->
+  <label for="carNumber">차 번호:</label><br>
+  <input type="text" id="carNumber" name="carNumber"><br><br>
+
+  <!-- 연식 입력 필드 -->
+  <label for="year">연식:</label><br>
+  <input type="text" id="year" name="year"><br><br>
+
+  <!-- 배기량 입력 필드 -->
+  <label for = "displacementVolume">배기량:</label><br>
+  <input type ="text" id ="displacementVolume" name ="displacementVolume"><br><br>
+
+  <!-- 옵션 입력 필드 -->
+  <label for = "option">옵션:</label><br>
+  <input type ="text" id ="option" name ="option"><br><br>
+
+  <label for = "option">차대번호:</label><br>
+  <input type ="text" id = "vin" name = "vin"><br><br>
+  <!-- 회원 가입 버튼 -->
+  <input type="submit" value="회원 가입">
+</form>
+
+<br><br>
+<!-- 로그인 링크 -->
+<a href="/">로그인</a>
+
+</body>
+
+</html>
+
+<!--
+개발자 도구 > 네트워크 > 페이로드 결과
+{"ID":"ㄴㄴ",
+"password":"ddd",
+name":"ham",
+"address":"asdd",
+"phone_number":"sdvxc",
+"driver_license":"xcvcx",
+"car_number":"xcvxcv",
+"year":"xvxc",
+"displacement_volume":"xcvxc",
+"option":"xcvxcv"}
+-->

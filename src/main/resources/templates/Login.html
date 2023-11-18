@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>로그인</title>
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <title>로그인</title>
+    </head>
+    <body>
+    <h2>로그인</h2>
+
+    <form>
+        <label for="ID">사용자명:</label><br>
+        <input type="text" id="ID" name="ID"><br><br>
+
+        <label for="password">비밀번호:</label><br>
+        <input type="password" id="password" name="password"><br><br>
+
+        <input type="submit" value="로그인">
+    </form>
+
+    <p>계정이 없으신가요? <a href="/signUp">회원가입</a></p>
+
+    </body>
+    <script>
+        function login(event) {
+            // form의 submit 이벤트를 막는다.
+            event.preventDefault();
+
+            // 사용자 입력값을 가져온다.
+            let userId = document.getElementById("ID").value;
+            let password = document.getElementById("password").value;
+
+            // fetch 요청을 보낸다.
+            fetch("/login", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                credentials: 'include',  // 쿠키를 포함하여 요청을 보내도록 설정
+                body: JSON.stringify({
+                    "ID": userId,
+                    "password": password
+                })
+            })
+                .then(function(response) {
+                    // 응답이 성공하면 성공 메시지를 출력한다.
+                    if (response.ok) {
+                        alert("로그인 성공!");
+                        window.location.href = "/selectingService";
+                    } else if(response.status == 401){
+                        // 응답이 실패하면 실패 메시지를 출력한다.
+                        alert("로그인 실패! 잘못된 비밀번호!");
+                    } else if(response.status == 404){
+                        alert("Login Failed: 아이디를 찾을 수 없습니다");
+                        window.location.href = "/signUp";
+                    }
+                })
+                .catch(function(error) {
+                    // 응답이 실패하면 오류 메시지를 출력한다.
+                    alert("로그인 요청 실패!");
+                    console.error('Error:', error);
+                });
+        }
+
+        // form의 submit 이벤트가 발생하면 login 함수를 실행한다.
+        document.querySelector("form").addEventListener("submit", login);
+    </script>

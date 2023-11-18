@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Driving Data</title>
+    <style>
+        /* 링크 위에 여백 추가 */
+        #serviceLink {
+            display: block;
+            margin-top: 50px;
+        }
+    </style>
+    <script>
+        window.onload = function() {
+            // 선택 버튼에 이벤트 리스너 추가
+            document.getElementById("selectButton").addEventListener("click", function() {
+                let selectedVin = document.getElementById("vinSelect").value;
+                fetch('/userDrivingData/' + selectedVin)  // POST 메서드로 변경
+                    .then(response => response.json())
+                    .then(data => {
+                        let drivingDataElement = document.getElementById("drivingData");
+                        // 데이터를 표시하는 로직은 데이터의 형태에 따라 달라집니다.
+                        // 여기서는 데이터가 문자열이라고 가정하였습니다.
+                        drivingDataElement.innerHTML = '';
+                        // data 리스트의 모든 항목을 순회하면서 화면에 표시합니다.
+                        data.forEach(item => {
+                            // 각 항목의 필드를 HTML 요소로 만들어 화면에 추가합니다.
+                            drivingDataElement.innerHTML += `
+              <div>
+                <h3>ID: ${item.id}</h3>
+                <p>Date ID: ${item.dateId}</p>
+                <p>Date: ${item.date}</p>
+                <p>Speed: ${item.speed}</p>
+                <p>RPM: ${item.rpm}</p>
+                <p>Odometer: ${item.odometer}</p>
+              </div>
+              <hr>
+            `;
+                        });
+                    });
+            });
+        };
+    </script>
+</head>
+<body>
+<h1>주행 데이터 조회</h1>
+<select id="vinSelect">
+    <option>차대 번호 선택</option>
+    <!-- Thymeleaf 등을 사용하여 서버에서 동적으로 옵션을 생성합니다. -->
+    <option th:each="vin : ${userCarVinList}" th:value="${vin}" th:text="${vin}"></option>
+</select>
+
+<!-- 선택 버튼 추가 -->
+<button id="selectButton">선택</button>
+
+<div id="drivingData">
+    <!-- 주행 데이터가 표시되는 영역 -->
+</div>
+<a id="serviceLink" href="/selectingService">서비스 선택</a>
+</body>
+</html>
